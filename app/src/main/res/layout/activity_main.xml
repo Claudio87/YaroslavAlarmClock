@@ -10,32 +10,116 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.alarm.MainActivity">
 
-    <!--<TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:layout_alignTop="@+id/datePicker"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <DatePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="59dp" />-->
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start"
+        android:text="START"
         android:id="@+id/buttonStart"
         android:onClick="onStartButton"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"/>
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="135dp"
+        android:id="@+id/textView" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="35dp"
+        android:id="@+id/textView2" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="22dp"
+        android:layout_marginEnd="22dp"
+        android:id="@+id/toggleButton"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="94dp"
+        android:scrollHorizontally="false"
+        android:elevation="1dp"
+        android:layout_centerVertical="false"
+        android:onClick="onStartStopButton"
+        />
+
+    <CheckBox
+        android:text="Вт"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tuesdayBox"
+        android:layout_alignBaseline="@+id/mondayBox"
+        android:layout_alignBottom="@+id/mondayBox"
+        android:layout_toRightOf="@+id/mondayBox"
+        android:layout_toEndOf="@+id/mondayBox" />
+
+    <CheckBox
+        android:text="Ср"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tuesdayBox"
+        android:layout_toRightOf="@+id/tuesdayBox"
+        android:layout_toEndOf="@+id/tuesdayBox"
+        android:id="@+id/wednesdayBox" />
+
+    <CheckBox
+        android:text="Чт"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/wednesdayBox"
+        android:layout_toRightOf="@+id/wednesdayBox"
+        android:layout_toEndOf="@+id/wednesdayBox"
+        android:id="@+id/thursdayBox" />
+
+    <CheckBox
+        android:text="Пт"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thursdayBox"
+        android:layout_toRightOf="@+id/thursdayBox"
+        android:layout_toEndOf="@+id/thursdayBox"
+        android:id="@+id/fridayBox" />
+
+    <CheckBox
+        android:text="Сб"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fridayBox"
+        android:layout_toRightOf="@+id/fridayBox"
+        android:layout_toEndOf="@+id/fridayBox"
+        android:id="@+id/saturdayBox" />
+
+    <CheckBox
+        android:text="Вс"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignBottom="@+id/saturdayBox"
+        android:layout_toRightOf="@+id/saturdayBox"
+        android:layout_toEndOf="@+id/saturdayBox"
+        android:id="@+id/sundayBox" />
+
+    <CheckBox
+        android:text="Пн"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="44dp"
+        android:id="@+id/mondayBox"
+        android:layout_below="@+id/toggleButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
