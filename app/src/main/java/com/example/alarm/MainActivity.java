@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     CheckBox sunday;
     Bundle test;
     DataBase db;
-    DataBaseHM dbhm;
+//    DataBaseHM dbhm;
 //     weekDayStatus links
     private WeekDayStatus wdsMonday;
     private WeekDayStatus wdsTuesday;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
         db = new DataBase(this, DataBase.DATABASE_NAME,null,DataBase.DATABASE_VERSION);
-        dbhm = new DataBaseHM(this, DataBaseHM.DATABASE_HM_NAME, null,DataBaseHM.DATABASE_HM_VERSION);
+//        dbhm = new DataBaseHM(this,DataBase.DATABASE_NAME, null,DataBaseHM.DATABASE_HM_VERSION);
         textView = (TextView) findViewById(R.id.textView);
         monday = (CheckBox) findViewById(R.id.mondayBox);
         tuesday = (CheckBox) findViewById(R.id.tuesdayBox);
@@ -145,7 +145,14 @@ public class MainActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker timePicker, int i, int i1) {
             hour = i;
             minute = i1;
-
+            if(db != null)
+                db.timeLines(hour,minute);
+            else{
+                db = new DataBase(MainActivity.this, DataBase.DATABASE_NAME,null,DataBase.DATABASE_VERSION);
+                db.timeLines(hour,minute);
+            }
+            Log.i("TimePickerDia", "часы и минуты переданы в БД для обработки....");
+            test();
         }
     };
 
@@ -176,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
         if (startStopButton.isChecked()){
                 Log.i("MainA_onStartButton", "updateWeek on");
                 newUpdateWeekStatus();
+//            Intent serviceIntent = new Intent(MainActivity.this, AlarmService.class);
+//            startService(serviceIntent);
+            showDialog(TIME_DIALOG);
             }
         else
             Toast.makeText(getApplicationContext(), "Будильник\nвыключен",Toast.LENGTH_SHORT).show();
@@ -208,37 +218,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void newUpdateWeekStatus(){
-        mainActivity.updateTest(wdsMonday,monday,1);
-        mainActivity.updateTest(wdsTuesday,tuesday,2);
-        mainActivity.updateTest(wdsWednesday,wednesday,3);
-        mainActivity.updateTest(wdsThursday,thursday,4);
-        mainActivity.updateTest(wdsFriday,friday,5);
-        mainActivity.updateTest(wdsSaturday,saturday,6);
-        mainActivity.updateTest(wdsSunday,sunday,7);
+        mainActivity.updateTest(wdsMonday,monday,2);
+        mainActivity.updateTest(wdsTuesday,tuesday,3);
+        mainActivity.updateTest(wdsWednesday,wednesday,4);
+        mainActivity.updateTest(wdsThursday,thursday,5);
+        mainActivity.updateTest(wdsFriday,friday,6);
+        mainActivity.updateTest(wdsSaturday,saturday,7);
+        mainActivity.updateTest(wdsSunday,sunday,1);
     }
 
     private void initWeekDayStatus(){
-        boolean stat1 = monday.isChecked();
-        wdsMonday = new WeekDayStatus(stat1, 1, "Monday");
-        db.creatLineInTable(wdsMonday);
-        boolean stat2 = tuesday.isChecked();
-        wdsTuesday = new WeekDayStatus(stat2, 2, "Tuesday");
-        db.creatLineInTable(wdsTuesday);
-        boolean stat3 = wednesday.isChecked();
-        wdsWednesday = new WeekDayStatus(stat3, 3, "Wednesday");
-        db.creatLineInTable(wdsWednesday);
-        boolean stat4 = thursday.isChecked();
-        wdsThursday = new WeekDayStatus(stat4, 4, "Thursday");
-        db.creatLineInTable(wdsThursday);
-        boolean stat5 = friday.isChecked();
-        wdsFriday = new WeekDayStatus(stat5, 5, "Friday");
-        db.creatLineInTable(wdsFriday);
-        boolean stat6 = saturday.isChecked();
-        wdsSaturday = new WeekDayStatus(stat6, 6, "Saturday");
-        db.creatLineInTable(wdsSaturday);
         boolean stat7 = sunday.isChecked();
-        wdsSunday = new WeekDayStatus(stat7, 7, "Sunday");
+        wdsSunday = new WeekDayStatus(stat7, 1, "Sunday");
         db.creatLineInTable(wdsSunday);
+
+        boolean stat1 = monday.isChecked();
+        wdsMonday = new WeekDayStatus(stat1, 2, "Monday");
+        db.creatLineInTable(wdsMonday);
+
+        boolean stat2 = tuesday.isChecked();
+        wdsTuesday = new WeekDayStatus(stat2, 3, "Tuesday");
+        db.creatLineInTable(wdsTuesday);
+
+        boolean stat3 = wednesday.isChecked();
+        wdsWednesday = new WeekDayStatus(stat3, 4, "Wednesday");
+        db.creatLineInTable(wdsWednesday);
+
+        boolean stat4 = thursday.isChecked();
+        wdsThursday = new WeekDayStatus(stat4, 5, "Thursday");
+        db.creatLineInTable(wdsThursday);
+
+        boolean stat5 = friday.isChecked();
+        wdsFriday = new WeekDayStatus(stat5, 6, "Friday");
+        db.creatLineInTable(wdsFriday);
+
+        boolean stat6 = saturday.isChecked();
+        wdsSaturday = new WeekDayStatus(stat6, 7, "Saturday");
+        db.creatLineInTable(wdsSaturday);
         //init superDay
         boolean superDay = true;
         WeekDayStatus wdsSuper = new WeekDayStatus(superDay, 8, "Super");
@@ -246,12 +262,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readStatus(){
-        monday.setChecked(db.readLineInTable(1));
-        tuesday.setChecked(db.readLineInTable(2));
-        wednesday.setChecked(db.readLineInTable(3));
-        thursday.setChecked(db.readLineInTable(4));
-        friday.setChecked(db.readLineInTable(5));
-        saturday.setChecked(db.readLineInTable(6));
-        sunday.setChecked(db.readLineInTable(7));
+        monday.setChecked(db.readLineInTable(2));
+        tuesday.setChecked(db.readLineInTable(3));
+        wednesday.setChecked(db.readLineInTable(4));
+        thursday.setChecked(db.readLineInTable(5));
+        friday.setChecked(db.readLineInTable(6));
+        saturday.setChecked(db.readLineInTable(7));
+        sunday.setChecked(db.readLineInTable(1));
     }
 }
