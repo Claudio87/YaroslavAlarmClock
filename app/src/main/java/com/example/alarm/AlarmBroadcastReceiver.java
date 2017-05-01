@@ -14,6 +14,5 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         Intent alarmIntent = new Intent(context,AlarmClass.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(alarmIntent);
-
     }
 }

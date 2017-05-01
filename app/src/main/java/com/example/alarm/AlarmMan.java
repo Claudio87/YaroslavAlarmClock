@@ -1,10 +1,8 @@
 package com.example.alarm;
 
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 /**
  * Created by клаудио on 17.03.2017.

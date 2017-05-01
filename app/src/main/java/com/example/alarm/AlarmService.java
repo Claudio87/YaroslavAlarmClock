@@ -6,41 +6,31 @@ import android.app.Service;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class AlarmService extends Service {
 
-    TextView textView;
     private int hour;
     private int minute;
     private DataBase db;
     private PendingIntent sender;
-//    private DataBaseHM dbhm;
-    private Calendar mCalendar;
+    private Calendar secondCalendar;
     AlarmManager aManager;
     private AlarmService alarmService;
-    public AlarmService() {
-
-    }
-
-    protected AlarmService(Parcel in) {
-        hour = in.readInt();
-        minute = in.readInt();
-        sender = in.readParcelable(PendingIntent.class.getClassLoader());
-        alarmService = in.readParcelable(AlarmService.class.getClassLoader());
-    }
+//    public AlarmService() {
+//
+//    }
+//
+//    protected AlarmService() {
+//        hour = in.readInt();
+//        minute = in.readInt();
+//        sender = in.readParcelable(PendingIntent.class.getClassLoader());
+//        alarmService = in.readParcelable(AlarmService.class.getClassLoader());
+//    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,53 +40,65 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        alarmService = this;
+//        alarmService = this;
+        //получаю экземпляр БД
         db = new DataBase(getBaseContext(),DataBase.DATABASE_NAME,null,DataBase.DATABASE_VERSION);
         Calendar mCalendar = Calendar.getInstance();
         Log.i("onStartCom..", "db = "+ db);
-        //получаем из интента значения времени: часы и минуты
-//        hour=intent.getIntExtra("Hour",0);
-//        minute=intent.getIntExtra("Minute",0);
+        // метод readTime возвращает массив с 2 элементами ЧАС и МИНУТЫ из БД
         int [] time = db.readTime();
         hour = time[0];
         minute = time[1];
-        mCalendar.set(Calendar.HOUR_OF_DAY, hour);
-        mCalendar.set(Calendar.MINUTE, minute);
-
-        int flag = intent.getIntExtra("Flag",0);
         Log.i("onStartCom..", "Hour = "+hour+"\nMinute = "+minute);
-
-//        if(flag == AlarmClass.NEW_ALARM_TASK) {
-//            Log.i("onStartCom..", "Flag NEW_ALARM_TASK");
-//            newDayCheck();
-//        }
-//        else {
+        //метод dayToNext - возвращает число дней, которое нужно прибавить к текущему дню для установки следующего будильника
             int nextDay = newDayCheck();
+        // возвращенное число дней,  которое будет переданно в экземпляр Calendar через метод add()
+            int plusDay = dayToNext(nextDay);
+        Log.i("!!!!!","plusDay="+plusDay);
             Intent alarmShow = new Intent(getApplicationContext(), AlarmBroadcastReceiver.class);
             aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             sender = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmShow, 0);
-            mCalendar.set(Calendar.DAY_OF_WEEK, nextDay);
+            Date curDate = Calendar.getInstance().getTime();
+            mCalendar.setTime(curDate);
+            mCalendar.add(Calendar.DAY_OF_YEAR,plusDay);
+            mCalendar.set(Calendar.HOUR_OF_DAY, hour);
+            mCalendar.set(Calendar.MINUTE, minute);
+        Log.i("CalendarTimeMillis", "timeInMillis = "+mCalendar.getTimeInMillis());
             aManager.set(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), sender);
-//            db.insertPenIntent(sender);
-//            serializAlSer();
-//        }
-
 //        stopSelf();
-
         return Service.START_STICKY;
+    }
+
+    private int dayToNext(int day){
+        int dayToNext = 0;
+        int cDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        Log.i("dayToNext", "current day = "+cDay+"\nnext day = "+day);
+        if(day == cDay) {
+            dayToNext = 7;
+            Log.i("dayToNext", "current day == next day. Day to next = 7");
+        }
+        else if(day > cDay) {
+            dayToNext = Math.abs(cDay - day);
+            Log.i("dayToNext", "current day < next day"+"\ndayToNext = "+dayToNext);
+        }
+        else if (day < cDay) {
+            dayToNext = day + (7 - cDay);
+            Log.i("dayToNext", "current day > next day"+"\ndayToNext = "+dayToNext);
+        }
+        Log.i("dayToNext", "END METHOD....");
+        return dayToNext;
     }
 
     private int newDayCheck(){
         Log.i("newDayCheck", "method start...");
-//        SQLiteDatabase sqLiteDatabase = db.getReadableDatabase();
-        mCalendar = Calendar.getInstance();
+        secondCalendar = Calendar.getInstance();//второй календарь, нужно разобраться!!!!!!!!
         int dayN = 0;
-        if(Calendar.getInstance().getTimeInMillis() >= mCalendar.getTimeInMillis()) {
-            dayN = mCalendar.get(Calendar.DAY_OF_WEEK)+1;
-            Log.i("newDayCheck","first if  dayN = "+dayN);
-        }
-        else
-            dayN = mCalendar.get(Calendar.DAY_OF_WEEK);
+//        if(Calendar.getInstance().getTimeInMillis() >= secondCalendar.getTimeInMillis()) {
+            dayN = secondCalendar.get(Calendar.DAY_OF_WEEK)+1;
+//            Log.i("newDayCheck","first if  dayN = "+dayN);
+//        }
+//        else
+//            dayN = secondCalendar.get(Calendar.DAY_OF_WEEK);
         Log.i("newDayCheck","searching for checked day start");
         boolean dayChe = false;
         Log.i("newDayCheck","before while dayN = "+dayN);
@@ -123,41 +125,6 @@ public class AlarmService extends Service {
             Log.i("newDayCheck","in while END dayN = "+dayN);
         }
         Toast.makeText(getBaseContext(),"Будильник установлен на "+dayN+" день",Toast.LENGTH_SHORT).show();
-
         return dayN;
     }
-
-    public void cancelAlarm(){
-        Log.i("CancelAlarm", "aManager = "+aManager+"\nsender = "+sender);
-        aManager.cancel(sender);
-    }
-
-    public PendingIntent getSender(){
-        return sender;
-    }
-
-//    public void serializAlSer(){
-//        Log.i("serializAlSer", "Serialize start...");
-//        try {
-//            File mFile = new File(getFilesDir(),"Sender.dat");
-//            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(mFile));
-//            oos.writeObject(alarmService);
-////            FileOutputStream fos = new FileOutputStream("Sender.dat");
-//            Log.i("serializAlSer", "pIntent = "+sender);
-//
-//            oos.flush();
-//            oos.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Log.i("serializAlSer", "Serialize finished...");
-//    }
-    public void testCancelAlarm(){
-        Intent alarmShow = new Intent(getBaseContext(), AlarmBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmShow, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
-    }
-
 }

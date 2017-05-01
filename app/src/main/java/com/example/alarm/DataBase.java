@@ -1,13 +1,10 @@
 package com.example.alarm;
 
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
 
 /**
@@ -21,18 +18,16 @@ public class DataBase extends SQLiteOpenHelper{
     private static final String KEY_ID = "id";
     private static final String WEEK_DAY = "day";
     private static final String STATUS = "current_status";
-
-    //Second Table for haours and minutes
-//    public static final int DATABASE_HM_VERSION = 1;
+    //Second table
     private static final String TABLE_HM_NAME = "hour_minute";
     private static final String KEY_HM_ID = "id";
     private static final String HOUR = "hour";
     private static final String MINUTE = "minute";
 
-    //Third table for pending intent
-    private static final String TABLE_PI_NAME = "pending_intent";
-    private static final String KEY_PI_ID = "id";
-    private static final String P_INTENT = "pIntent";
+    //Third table. Making it for save different state
+    private static final String TABLE_OPTION = "option_intent";
+    private static final String KEY_OPTION_ID = "id";
+    private static final String OPTION = "option";
 
 
     public DataBase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -45,14 +40,17 @@ public class DataBase extends SQLiteOpenHelper{
                 +STATUS+" TEXT"+")";
         String CREATE_2_TABLE = "CREATE TABLE " + TABLE_HM_NAME + "("+KEY_HM_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+HOUR+" TEXT,"
                 +MINUTE+" TEXT"+")";
-        String CREATE_3_TABLE = "CREATE TABLE " + TABLE_PI_NAME + "("+KEY_PI_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+P_INTENT
+        String CREATE_3_TABLE = "CREATE TABLE " + TABLE_OPTION + "("+ KEY_OPTION_ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+ OPTION
                 +" TEXT"+")";
 
         String CREATE_LINE1 = "INSERT INTO "+ TABLE_HM_NAME + "("+HOUR+", "+MINUTE+") VALUES "+"("+1+", "+1+");";
+        String CREATE_LINE1_TABLE_OPTION = "INSERT INTO "+TABLE_OPTION + "("+OPTION+") VALUES "+"("+2+");";
+
         sqLiteDatabase.execSQL(CREATE_TABLE);
         sqLiteDatabase.execSQL(CREATE_2_TABLE);
         sqLiteDatabase.execSQL(CREATE_LINE1);
-//        sqLiteDatabase.execSQL(CREATE_3_TABLE);
+        sqLiteDatabase.execSQL(CREATE_3_TABLE);
+        sqLiteDatabase.execSQL(CREATE_LINE1_TABLE_OPTION);
     }
 
     @Override
@@ -77,13 +75,13 @@ public class DataBase extends SQLiteOpenHelper{
             sqLiteDatabase.close();
         }
 
-    // сохраняет часы и минуты в БД. Далее можно сделать отдлеьную базу для этих параметров.
-    public void saveHoMiDate(int hour, int minute){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(WEEK_DAY,String.valueOf(hour));
-        values.put(STATUS,String.valueOf(minute));
-    }
+
+//    public void saveHoMiDate(int hour, int minute){
+//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put(WEEK_DAY,String.valueOf(hour));
+//        values.put(STATUS,String.valueOf(minute));
+//    }
 
     public void updateStatus(WeekDayStatus weekDayStatus){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -115,6 +113,7 @@ public class DataBase extends SQLiteOpenHelper{
 
     //Second table manipulation
 
+    // сохраняю часы и минуты в БД. Далее можно сделать отдлеьную базу для этих параметров.
     public void timeLines(int hour, int minute){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -142,30 +141,30 @@ public class DataBase extends SQLiteOpenHelper{
         Log.i("readTime", "method finished...");
         return time;
     }
-//
-//    public void insertPenIntent(PendingIntent pendingIntent){
-//        Log.i("insertPenIntent", "Method starts...");
-//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put("pIntent", String.valueOf(pendingIntent));
-//        sqLiteDatabase.insert(TABLE_PI_NAME, null, values);
-//        sqLiteDatabase.close();
-//        Log.i("insertPenIntent", "Method finished. pIntent = "+String.valueOf(pendingIntent));
-//    }
 
-////    public void readPenIntent(){
-//        String pIntent = "";
-//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-//        String query = "SELECT * FROM "+TABLE_PI_NAME;
-//        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-//        if(cursor.moveToFirst())
-//            pIntent = cursor.getString(1);
-//            Uri mUri = Uri.parse(pIntent);
-//        PendingIntent pendingIntent = (PendingIntent)pIntent.getBytes();
+    // Third table manipulation
+    // если опций (option) будет много можно на вход передавать номер ID и делать строки через StringBuilder
+    public void setOption (String option){
+        Log.i("setOption", "boolean option = "+option);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(OPTION,option);
+        String where = " id = 1;";
+        sqLiteDatabase.update(TABLE_OPTION, values, where,null);
+        Log.i("setOption", "method finished...");
 
-//        PendingIntent pendingIntent = pIntent;
-//        PendingIntent pendingIntent = PendingIntent.
-
-//    }
+    }
+    public String readOption(){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String option = "";
+        String selectQuery = "SELECT * FROM "+TABLE_OPTION;
+        Cursor cursor = sqLiteDatabase.rawQuery(selectQuery,null);
+        if(cursor.moveToFirst()){
+            option = cursor.getString(1);
+            Log.i("readOption", "option = "+option);
+        }
+        Log.i("readOption", "method finished...");
+        return option;
+    }
 
 }

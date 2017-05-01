@@ -1,6 +1,5 @@
 package com.example.alarm;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -10,47 +9,33 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     Context context;
-    AlarmManager alarmManager;
-    TimePicker timeDialog;
-    DatePicker datePicker;
     TextView textView;
     ToggleButton startStopButton;
-    private static final int DATE_DIALOG = 1;
     private static final int TIME_DIALOG = 2;
     int hour;
     int minute;
-    Runnable runnable;
     AlarmMan alarmMan;
-    CheckBox monday;
-    CheckBox tuesday;
-    CheckBox wednesday;
-    CheckBox thursday;
-    CheckBox friday;
-    CheckBox saturday;
-    CheckBox sunday;
+    private CheckBox monday;
+    private CheckBox tuesday;
+    private CheckBox wednesday;
+    private CheckBox thursday;
+    private CheckBox friday;
+    private CheckBox saturday;
+    private CheckBox sunday;
     Bundle test;
-    DataBase db;
-//    DataBaseHM dbhm;
-//     weekDayStatus links
+    private DataBase db;
+
     private WeekDayStatus wdsMonday;
     private WeekDayStatus wdsTuesday;
     private WeekDayStatus wdsWednesday;
@@ -68,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
         db = new DataBase(this, DataBase.DATABASE_NAME,null,DataBase.DATABASE_VERSION);
-//        dbhm = new DataBaseHM(this,DataBase.DATABASE_NAME, null,DataBaseHM.DATABASE_HM_VERSION);
-        textView = (TextView) findViewById(R.id.textView);
-        monday = (CheckBox) findViewById(R.id.mondayBox);
-        tuesday = (CheckBox) findViewById(R.id.tuesdayBox);
-        wednesday = (CheckBox) findViewById(R.id.wednesdayBox);
-        thursday = (CheckBox) findViewById(R.id.thursdayBox);
-        friday = (CheckBox) findViewById(R.id.fridayBox);
-        saturday = (CheckBox) findViewById(R.id.saturdayBox);
-        sunday = (CheckBox) findViewById(R.id.sundayBox);
+        textView   = (TextView) findViewById(R.id.textView);
+        monday     = (CheckBox) findViewById(R.id.mondayBox);
+        tuesday    = (CheckBox) findViewById(R.id.tuesdayBox);
+        wednesday  = (CheckBox) findViewById(R.id.wednesdayBox);
+        thursday   = (CheckBox) findViewById(R.id.thursdayBox);
+        friday     = (CheckBox) findViewById(R.id.fridayBox);
+        saturday   = (CheckBox) findViewById(R.id.saturdayBox);
+        sunday     = (CheckBox) findViewById(R.id.sundayBox);
         startStopButton = (ToggleButton) findViewById(R.id.toggleButton);
+
         Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         File customFile = new File(getFilesDir(), "Option.txt");
@@ -85,10 +70,15 @@ public class MainActivity extends AppCompatActivity {
         if(db.readLineInTable(8) == true) {
             Log.i("MainA_onCreate", "readStatus...chosen");
             readStatus();
+            boolean b = Boolean.parseBoolean(db.readOption());
+            Log.i("onCreate", "Table created, boolean b = "+b);
+            startStopButton.setChecked(b);
         }
         else {
             Log.i("MainA_onCreate", "initWeek...chosen");
             initWeekDayStatus();
+            db.setOption(String.valueOf(startStopButton.isChecked()));
+            Log.i("onCreate", "Table not created, else version");
         }
         long time = currentDate.getTime();
         textView.setText(sdf.format(currentDate));
@@ -118,15 +108,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        readStatus();
         Log.i("onResume", "savedInstanceState = " +test);
-    }
-
-    private void alarmServiceTest(){
-        Calendar mCalendar = Calendar.getInstance();
-        Intent serviceIntent = new Intent(this, AlarmService.class);
-        serviceIntent.putExtra("Calendar", mCalendar);
-
-        startService(serviceIntent);
     }
 
     @Override
@@ -152,40 +135,26 @@ public class MainActivity extends AppCompatActivity {
                 db.timeLines(hour,minute);
             }
             Log.i("TimePickerDia", "часы и минуты переданы в БД для обработки....");
-            test();
+            Intent serviceIntent = new Intent(context, AlarmService.class);
+            startService(serviceIntent);
+            readStatus();
+//            test();
         }
     };
-
+//   if works delete
     // передаю время в AlarmMan, где отправляю данные в AlarmService
-    private void test(){
-        alarmMan = new AlarmMan(hour,minute,MainActivity.this);
-        alarmMan.setAlarm();
-    }
-
-//    public void writeCheckButton(){
-//        try {
-//            OutputStream outputStream = openFileOutput("Option.txt",Context.MODE_PRIVATE);
-//            OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-//            BufferedWriter bufferdWriter = new BufferedWriter(osw);
-//            String mondayCheck = String.valueOf("Monday is checked - "+monday);
-//            try {
-//                bufferdWriter.write(mondayCheck);
-//                bufferdWriter.flush();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+//    private void test(){
+//        alarmMan = new AlarmMan(hour,minute,MainActivity.this);
+//        alarmMan.setAlarm();
 //    }
 
     public void onStartStopButton(View view) {
         if (startStopButton.isChecked()){
                 Log.i("MainA_onStartButton", "updateWeek on");
                 newUpdateWeekStatus();
-//            Intent serviceIntent = new Intent(MainActivity.this, AlarmService.class);
-//            startService(serviceIntent);
             showDialog(TIME_DIALOG);
+            db.setOption(String.valueOf(startStopButton.isChecked()));
+            Log.i("onStartStopButton","startStopButton.isChecked() = "+startStopButton.isChecked());
             }
         else
             Toast.makeText(getApplicationContext(), "Будильник\nвыключен",Toast.LENGTH_SHORT).show();
@@ -194,12 +163,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        //Сохраняю статус дней в БД
+        newUpdateWeekStatus();
+        //Сохраняю статус включателя в БД
+        db.setOption(String.valueOf(startStopButton.isChecked()));
+        //Закрываю БД
         db.close();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //Сохраняю статус дней в БД
+        newUpdateWeekStatus();
+        //Сохраняю статус включателя в БД
+        db.setOption(String.valueOf(startStopButton.isChecked()));
+        //Закрываю БД
         db.close();
     }
 
@@ -226,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivity.updateTest(wdsSaturday,saturday,7);
         mainActivity.updateTest(wdsSunday,sunday,1);
     }
-
+    // use once, when application creates first time
     private void initWeekDayStatus(){
         boolean stat7 = sunday.isChecked();
         wdsSunday = new WeekDayStatus(stat7, 1, "Sunday");
@@ -263,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void readStatus(){
         monday.setChecked(db.readLineInTable(2));
+        if(startStopButton.isChecked()) {//не работает
+            monday.setClickable(true);
+            Log.i("readStatus","startStopButton.isChecked = "+startStopButton.isChecked());
+        }
         tuesday.setChecked(db.readLineInTable(3));
         wednesday.setChecked(db.readLineInTable(4));
         thursday.setChecked(db.readLineInTable(5));
