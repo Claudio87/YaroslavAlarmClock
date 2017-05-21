@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FF2ACA52</color>
+    <color name="colorPrimaryDark">#FF2ACA52</color>
+    <color name="colorAccent">#3b3738</color>
+    <color name="col1text">#2ac952</color>
+    <color name="backgroundMain">#fafad4</color>
+    <color name="disabledCheckBox">#FFC1C1BA</color>
 </resources>

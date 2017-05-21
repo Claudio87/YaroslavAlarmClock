@@ -75,14 +75,6 @@ public class DataBase extends SQLiteOpenHelper{
             sqLiteDatabase.close();
         }
 
-
-//    public void saveHoMiDate(int hour, int minute){
-//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(WEEK_DAY,String.valueOf(hour));
-//        values.put(STATUS,String.valueOf(minute));
-//    }
-
     public void updateStatus(WeekDayStatus weekDayStatus){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String currentStatus = String.valueOf(weekDayStatus.isStatus());
@@ -149,18 +141,25 @@ public class DataBase extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(OPTION,option);
-        String where = " id = 1;";
+        String where = " id = 1";
         sqLiteDatabase.update(TABLE_OPTION, values, where,null);
         Log.i("setOption", "method finished...");
-
     }
-    public String readOption(){
+    public void insertOption (String option){
+        Log.i("insertOption", "boolean option = "+option);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(OPTION,option);
+        sqLiteDatabase.insert(TABLE_OPTION,null,values);
+        Log.i("insertOption", "method finished...");
+    }
+    public String readOption(int id){
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String option = "";
         String selectQuery = "SELECT * FROM "+TABLE_OPTION;
         Cursor cursor = sqLiteDatabase.rawQuery(selectQuery,null);
         if(cursor.moveToFirst()){
-            option = cursor.getString(1);
+            option = cursor.getString(id);
             Log.i("readOption", "option = "+option);
         }
         Log.i("readOption", "method finished...");

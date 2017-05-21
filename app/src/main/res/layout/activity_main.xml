@@ -10,32 +10,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.alarm.MainActivity">
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="START"
         android:id="@+id/buttonStart"
         android:onClick="onStartButton"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"/>-->
 
     <TextView
         android:text="TextView"
+        style="@style/TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="135dp"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:textAlignment="center"
+        android:fontFamily="casual"/>
 
     <TextView
-        android:text="TextView"
+        style="@style/TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
         android:layout_alignLeft="@+id/textView"
         android:layout_alignStart="@+id/textView"
         android:layout_marginTop="35dp"
-        android:id="@+id/textView2" />
+        android:textAlignment="center"
+        android:id="@+id/textView2"
+        />
 
     <ToggleButton
         android:text="ToggleButton"
@@ -47,79 +52,140 @@
         android:layout_below="@+id/textView2"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="94dp"
+        android:layout_marginTop="40dp"
         android:scrollHorizontally="false"
         android:elevation="1dp"
         android:layout_centerVertical="false"
-        android:onClick="onStartStopButton"
-        />
-
-    <CheckBox
-        android:text="Вт"
+        android:onClick="onStartStopButton"/>
+        <!--Monday-->
+    <TextView
+        android:text="ПН"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tuesdayBox"
-        android:layout_alignBaseline="@+id/mondayBox"
-        android:layout_alignBottom="@+id/mondayBox"
-        android:layout_toRightOf="@+id/mondayBox"
-        android:layout_toEndOf="@+id/mondayBox" />
-
-    <CheckBox
-        android:text="Ср"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tuesdayBox"
-        android:layout_toRightOf="@+id/tuesdayBox"
-        android:layout_toEndOf="@+id/tuesdayBox"
-        android:id="@+id/wednesdayBox" />
-
-    <CheckBox
-        android:text="Чт"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/wednesdayBox"
-        android:layout_toRightOf="@+id/wednesdayBox"
-        android:layout_toEndOf="@+id/wednesdayBox"
-        android:id="@+id/thursdayBox" />
-
-    <CheckBox
-        android:text="Пт"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thursdayBox"
-        android:layout_toRightOf="@+id/thursdayBox"
-        android:layout_toEndOf="@+id/thursdayBox"
-        android:id="@+id/fridayBox" />
-
-    <CheckBox
-        android:text="Сб"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/fridayBox"
-        android:layout_toRightOf="@+id/fridayBox"
-        android:layout_toEndOf="@+id/fridayBox"
-        android:id="@+id/saturdayBox" />
-
-    <CheckBox
-        android:text="Вс"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignBottom="@+id/saturdayBox"
-        android:layout_toRightOf="@+id/saturdayBox"
-        android:layout_toEndOf="@+id/saturdayBox"
-        android:id="@+id/sundayBox" />
-
-    <CheckBox
-        android:text="Пн"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="44dp"
-        android:id="@+id/mondayBox"
+        android:id="@+id/textViewMonday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/toggleButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="60dp"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxMonday"
+        android:layout_alignTop="@+id/textViewMonday"
+        android:layout_alignLeft="@+id/textViewMonday"
+        android:layout_alignStart="@+id/textViewMonday"
+        android:layout_marginTop="29dp"/>
+        <!--Tuesday-->
+    <TextView
+        android:text="ВТ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewTuesday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewMonday"
+        android:layout_toRightOf="@+id/textViewMonday"
+        android:layout_toEndOf="@+id/textViewMonday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxTuesday"
+        android:layout_alignBottom="@+id/checkBoxMonday"
+        android:layout_alignLeft="@+id/textViewTuesday"
+        android:layout_alignStart="@+id/textViewTuesday"
+        />
+        <!--Wednesday-->
+    <TextView
+        android:text="СР"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewWednesday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewTuesday"
+        android:layout_toRightOf="@+id/textViewTuesday"
+        android:layout_toEndOf="@+id/textViewTuesday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxWednesday"
+        android:layout_alignBottom="@+id/checkBoxTuesday"
+        android:layout_alignLeft="@+id/textViewWednesday"
+        android:layout_alignStart="@+id/textViewWednesday"/>
+        <!--Thursday-->
+    <TextView
+        android:text="ЧТ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewThursday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewWednesday"
+        android:layout_toRightOf="@+id/textViewWednesday"
+        android:layout_toEndOf="@+id/textViewWednesday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxThursday"
+        android:layout_alignBottom="@+id/checkBoxWednesday"
+        android:layout_alignLeft="@+id/textViewThursday"
+        android:layout_alignStart="@+id/textViewThursday"/>
+        <!--Friday-->
+    <TextView
+        android:text="ПТ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewFriday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewThursday"
+        android:layout_toRightOf="@+id/textViewThursday"
+        android:layout_toEndOf="@+id/textViewThursday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxFriday"
+        android:layout_alignBottom="@+id/checkBoxThursday"
+        android:layout_alignLeft="@+id/textViewFriday"
+        android:layout_alignStart="@+id/textViewFriday"/>
+        <!--Saturday-->
+    <TextView
+        android:text="СБ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewSaturtday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewFriday"
+        android:layout_toRightOf="@+id/textViewFriday"
+        android:layout_toEndOf="@+id/textViewFriday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxSaturday"
+        android:layout_alignBottom="@+id/checkBoxFriday"
+        android:layout_alignLeft="@+id/textViewSaturtday"
+        android:layout_alignStart="@+id/textViewSaturtday"/>
+        <!--Sunday-->
+    <TextView
+        android:text="ВС"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewSunday"
+        android:textSize="45px"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignTop="@+id/textViewSaturtday"
+        android:layout_toRightOf="@+id/textViewSaturtday"
+        android:layout_toEndOf="@+id/textViewSaturtday"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxSunday"
+        android:layout_alignBottom="@+id/checkBoxSaturday"
+        android:layout_alignLeft="@+id/textViewSunday"
+        android:layout_alignStart="@+id/textViewSunday"
+        />
+    <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
 </RelativeLayout>

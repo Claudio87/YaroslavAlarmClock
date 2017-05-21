@@ -1,7 +1,6 @@
 package com.example.alarm;
 
 import android.app.Activity;
-
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -10,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 import java.io.IOException;
 
@@ -18,14 +18,17 @@ import java.io.IOException;
  */
 
 public class AlarmClass extends Activity{
-
-    MediaPlayer mediaPlayer;
-    public static final int NEW_ALARM_TASK = 1;
-    AlarmService alarmService;
+    private MediaPlayer mediaPlayer;
+    private AlarmService alarmService;
+    private Intent serviceIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+        //включает экран, когда он залочен
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+       //--------//
         Toast.makeText(AlarmClass.this,"Hello",Toast.LENGTH_LONG).show();
         mediaPlayer = new MediaPlayer();
         bellRinging();
@@ -52,9 +55,16 @@ public class AlarmClass extends Activity{
 
     public void onStopButtonClick(View view) {
         stopPlayer();
-        Intent serviceIntent = new Intent(getBaseContext(), AlarmService.class);
-        serviceIntent.putExtra("Flag",NEW_ALARM_TASK);
-        startService(serviceIntent);
+        serviceIntent = new Intent(getApplicationContext(), AlarmService.class);
+        serviceIntent.addFlags(MainActivity.NEW_ALARM_EVENT);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startService(serviceIntent);
+            }
+        });
+        thread.start();
+
         Log.i("onStopButtonClick", "method end...");
         view.setVisibility(View.INVISIBLE);
     }
